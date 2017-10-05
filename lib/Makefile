@@ -10,7 +10,6 @@ CFLAGS=-Wall -pedantic -Werror -g -std=c++0x -I../lib/inc $(BOOST_DIR)
 OBJECTS = ../obj/parser.o ../obj/Filehandler.o ../obj/Exec.o ../obj/thread.o
 
 
-
 lib: $(OBJ_PATH)
 
 ../obj/parser.o:src/parser.cpp
@@ -32,6 +31,9 @@ lib: $(OBJ_PATH)
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 ../obj/thread.o:src/thread.cpp
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+../obj/Cutter.o:src/Cutter.cpp
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 global: lib

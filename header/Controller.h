@@ -51,44 +51,6 @@ struct Parameter
 };
 
 
-/***
-
-	returns true if a directory exists
-
-***/
-
-inline bool
-exists_dir (const std::string & name)
-{
-  DIR *dir = opendir (name.c_str ());
-  if (dir)
-    {
-      /* Directory exists. */
-      closedir (dir);
-      return true;
-    }
-  return false;
-}
-
-/***
-
-	returns true if a file exists
-
-***/
-
-inline bool
-exists_file (const std::string & name)
-{
-  if (FILE * file = fopen (name.c_str (), "r"))
-    {
-      fclose (file);
-      return true;
-    }
-  else
-    {
-      return false;
-    }
-}
 
 /***
 

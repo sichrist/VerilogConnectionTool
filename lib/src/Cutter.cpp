@@ -63,6 +63,7 @@ void Cutter::begin()
 	p_r 	= &positions[0];
 	dir 	= 1;
 	endbit 	= 1;
+	stairway= 0;
 }
 
 void Cutter::end()
@@ -72,6 +73,7 @@ void Cutter::end()
 	p_l 	= &positions[size-1];
 	dir 	= -1;
 	endbit 	= 1;
+	stairway= 0;
 
 }
 
@@ -135,15 +137,7 @@ string Cutter::next()
 
 	if( stairway )
 	{
-		if( dir > 0)
-		{
-			start = s_;
-		}
-		else
-		{
-			*p_r = e_;
-			start = *p_l;
-		}
+		start = s_;
 	}
 	else
 	{

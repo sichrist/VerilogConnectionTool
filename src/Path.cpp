@@ -5,89 +5,104 @@
 * @Last Modified time: 2017-09-25 14:02:16
 */
 
-# include "Controller.h"
+# include "Path.h"
 
-/// Splits a path in folder and filename
 
-Path::Path ()
+/***
+
+  returns true if a directory exists
+
+***/
+
+inline bool
+exists_dir (const std::string & name)
 {
-  path = "";
-  pathfolder = "";
-  filename = "";
-  delim = '/';
+  DIR *dir = opendir (name.c_str ());
+  if (dir)
+    {
+      /* Directory exists. */
+      closedir (dir);
+      return true;
+    }
+  return false;
 }
 
-Path::Path (string path_pa)
+/***
+
+  returns true if a file exists
+
+***/
+
+inline bool
+exists_file (const std::string & name)
 {
-  setpath (path_pa);
+  if (FILE * file = fopen (name.c_str (), "r"))
+    {
+      fclose (file);
+      return true;
+    }
+  else
+    {
+      return false;
+    }
 }
 
-Path::Path (string path_pa, char delim_pa)
+Path::Path( string path, char delim ) : Cutter( path, delim )
 {
-  setpath (path_pa, delim_pa);
+  set( path, delim );
 }
 
-Path::~Path ()
+Path::Path( string path ) : Cutter( path, '/' )
 {
-
+  set( path, '/' );
 }
 
-void
-Path::process ()
+Path::~Path()
 {
-  Parser parser;
-  parser.setstring (path);
-  parser.setdelimiter (delim);
-  parser.parse ();
-  parser.getnext ();
-  pathfolder = parser.getnext ();
-
-  parser.singleparse ();
-  filename = parser.getnextbw ();
 }
 
-void
-Path::setpath (string path_pa)
+void Path::set( string path, char delim )
 {
-  path = path_pa;
-  process ();
-
+  data      = path;
+  delimiter = delim;
+  end();
+  filename  = next();
+  end();
+  nextstep();
+  folderpath= nextstep() + "/";
 }
 
-void
-Path::setpath (string path_pa, char delim_pa)
-{
-  this->path = path_pa;
-  this->delim = delim_pa;
-  process ();
-}
-
-string
-Path::getpath ()
-{
-  return path;
-}
-
-string
-Path::getpathfolder ()
-{
-  return pathfolder;
-}
-
-string
-Path::getfilename ()
+string Path::getfilename()
 {
   return filename;
 }
 
-bool
-Path::exists ()
+string Path::getfolder()
 {
-  return exists_file (path);
+  return folderpath;
 }
 
-bool
-Path::exists (string path)
+string Path::getfullpath()
 {
-  return exists_file (path + filename);
+  return data;
+}
+
+bool Path::fileExist()
+{
+  return exists_file(data);
+}
+
+bool Path::dirExist()
+{
+  return exists_dir(folderpath);
+}
+
+bool Path::createFile()
+{
+  return false;
+}
+
+bool Path::createFolder()
+{
+  return false;
 }

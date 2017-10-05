@@ -29,6 +29,17 @@ global: ../bin/test
 ../bin/ict: ict.cpp $(DEPENDENCIES)
 	$(CC) $(BOOST_DIR) $(PROJECT_CONST)  $(CFLAGS) $(LDFLAGS) $^ -o $@ $(BOOST_LIB)
 
+# TestTargets
+
+test: test.cpp ../obj/Cutter.o ../obj/Path.o
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+
+Cutter:
+	@$(MAKE) $(PRNTFLAGS)  -C ../lib ../obj/Cutter.o
+
+Path:
+	@$(MAKE) $(PRNTFLAGS)  -C ../src ../obj/Path.o
+
 clean:
 	@$(MAKE) $(PRNTFLAGS) -C ../src clean
 	@$(MAKE) $(PRNTFLAGS) -C ../lib clean

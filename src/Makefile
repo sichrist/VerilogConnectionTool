@@ -10,6 +10,10 @@ BINDIR = $(addprefix ../obj/,$(OBJECTS1))
 src : $(BINDIR)
 #	@bash -c "indent $(INDENT_OPTIONS) $(SOURCES) $(HDR)"
 #	@rm *.cpp~ ../header/*.h~
+
+
+Path_: ../obj/Path.o
+
 ../obj/module.o: module.cpp
 	$(CC) -c $(CFLAGS) -o $@ $<
 

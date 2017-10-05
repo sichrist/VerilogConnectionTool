@@ -10,6 +10,7 @@
 using namespace std;
 
 # include "Cutter.h"
+# include "Path.h"
 
 int main ()
 {
@@ -140,6 +141,14 @@ int main ()
   cout << "---------"<<cutter3.getdata()<<"-----------"<<endl;
   cout << "-------------------------------------------"<<endl;
 
+  cout << "########## PATH TEST ##############"<<endl;
+
+  Path path0("/home/simon/Arbeitsverzeichnis/VerilogConnectionTool/main");
+  cout<<"1.) " << path0.getfilename() <<endl;
+  cout<<"2.) " << path0.getfolder() <<endl;
+  cout<<"3.) " << path0.getfullpath() <<endl;
+  cout<<"4.) " << path0.dirExist() <<endl;
+  cout<<"5.) " << path0.fileExist() <<endl;
 
   return 0;
 
