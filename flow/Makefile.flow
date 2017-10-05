@@ -1,0 +1,36 @@
+
+SRC = ../src/
+HDR = ../header/
+LIB = ../lib/src/
+LIB_H = ../lib/inc/
+SRCFILES = $(wildcard $(SRC)*.cpp)
+LIBFILES = $(wildcard $(LIB)*.cpp)
+DEPENDENCIES = $(SRCFILES:../src/%.cpp=../obj/%.o) $(LIBFILES:../lib/src/%.cpp=../obj/%.o)
+MAIN = ../main/
+IDIR = $(HDR) $(LIB_H)
+SUBDIRS = $(PWD)/lib/ $(PWD)/src/ $(PWD)/main/
+OBJDIR = ../obj
+BOOST 	= /home/projects/simon/lib_boost/boost_1_65_1/
+BOOST_DIR = -I $(BOOST)
+BOOST_LIB = $(BOOST)stage/lib/libboost_regex.a $(BOOST)stage/lib/libboost_iostreams.a
+
+#	-l100 	-> 	length of line = 100
+#	-cdb	->
+#	-sc 	->
+# 	-bli0 	->
+# 	-di16 	->	declaration-indentation = 16
+#	-blf 	->	braces-after-func-def-line 
+
+
+#INDENT_OPTIONS = -i8 -nbap -nbad -bli0 -di16 -blf -nbad -l100
+INDENT_OPTIONS = 
+CC =g++
+CFLAGS =-Wall -pedantic -Werror -g -I$(IDIR) -std=c++0x -pthread
+LDFLAGS = -lpthread -lrt
+PRNTFLAGS =--no-print-directory
+
+FLOW_PATH = $(PWD)
+NEW_PATH = $(shell pwd)
+PROJ_PATH = $($(FLOW_PATH):/flow=)
+OBJ_PATH=$(PROJ_PATH)/obj
+
