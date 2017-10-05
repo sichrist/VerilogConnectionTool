@@ -2,68 +2,145 @@
 * @Author: simon
 * @Date:   2017-08-11 16:05:33
 * @Last Modified by:   simon
-* @Last Modified time: 2017-09-26 09:10:40
+* @Last Modified time: 2017-10-04 17:08:56
 */
 
 #include <iostream>
 
 using namespace std;
 
+# include "Cutter.h"
 
-# include <iostream>
-# include "parser.h"
-# include "modhandler.h"
-# include "Filehandler.h"
-# include "thread.h"
-# include "Controller.h"
-
-
-using namespace std;
-
-int
-main ()
+int main ()
 {
 
-/*** ACHTUNG !!!!
+  
+  string tmp = " ";
+  Cutter cutter(".Das.ist.ein.Test.",'.');
+  cout << "\n from start \n";
+  cutter.begin();
+  while( cutter.fin() )
+  {
+    cout <<"\""<< cutter.next()<<"\""<<endl;
+  }
+  
+  cutter.end();
+  cout << "\n from end \n";
+  while( cutter.fin() )
+  {
+    cout <<"\""<< cutter.next()<<"\""<<endl;
+  }
+  cout << "---------"<<cutter.getdata()<<"-----------"<<endl;
+  cout << "-------------------------------------------"<<endl;
+  Cutter cutter1("Das.ist.ein.Test.",'.');
+  cout << "\n from start \n";
+  cutter1.begin();
+  while( cutter1.fin() )
+  {
+    cout <<"\""<<cutter1.next()<<"\""<<endl;
+  }
+  cout << "\n from end \n";
+  cutter1.end();
+  while( cutter1.fin() )
+  {
+    cout << "\""<<cutter1.next()<<"\""<<endl;
+  }
+  cout << "---------"<<cutter1.getdata()<<"-----------"<<endl;
+  cout << "-------------------------------------------"<<endl;  
+  Cutter cutter2(".Das.ist.ein.Test",'.');
+  cout << "\n from start \n";
+  cutter2.begin();
+  while( cutter2.fin() )
+  {
+    cout << "\""<<cutter2.next()<<"\""<<endl;
+  }
+  cout << "\n from end \n";
+  cutter2.end();
+  while( cutter2.fin() )
+  {
+    cout <<"\""<< cutter2.next()<<"\""<<endl;
+  }
+  cout << "---------"<<cutter2.getdata()<<"-----------"<<endl;
+  cout << "-------------------------------------------"<<endl;  
+  Cutter cutter3("Das.ist.ein.Test",'.');
+  cout << "\n from start \n";
+  cutter3.begin();
+  while( cutter3.fin() )
+  {
+    cout <<"\""<< cutter3.next()<<"\""<<endl;
+  }
+  cout << "\n from end \n";
+  cutter3.end();
+  while( cutter3.fin() )
+  {
+    cout <<"\""<< cutter3.next()<<"\""<<endl;
+  }
+  cout << "---------"<<cutter3.getdata()<<"-----------"<<endl;
+  cout << "-------------------------------------------"<<endl;
 
-	Filehandler.cpp:632
+//############################################################
 
-	string tmp_path = this->path;
-	this->path = pth;
-	pth = tmp_path;
-	fullcpy(pth);
-ENTFERNEN !!! ***/
+  cout << "########## STAIRWAYS TO HEAVEN ##############"<<endl;
+  cout << "\n from start \n";
+  cutter.begin();
+  while( cutter.fin() )
+  {
+    cout <<"\""<< cutter.nextstep()<<"\""<<endl;
+  }
+  
+  cutter.end();
+  cout << "\n from end \n";
+  while( cutter.fin() )
+  {
+    cout <<"\""<< cutter.nextstep()<<"\""<<endl;
+  }
+  cout << "---------"<<cutter.getdata()<<"-----------"<<endl;
+  cout << "-------------------------------------------"<<endl;
+  
+  cout << "\n from start \n";
+  cutter1.begin();
+  while( cutter1.fin() )
+  {
+    cout <<"\""<<cutter1.nextstep()<<"\""<<endl;
+  }
+  cout << "\n from end \n";
+  cutter1.end();
+  while( cutter1.fin() )
+  {
+    cout << "\""<<cutter1.nextstep()<<"\""<<endl;
+  }
+  cout << "---------"<<cutter1.getdata()<<"-----------"<<endl;
+  cout << "-------------------------------------------"<<endl;  
+  cout << "\n from start \n";
+  cutter2.begin();
+  while( cutter2.fin() )
+  {
+    cout << "\""<<cutter2.nextstep()<<"\""<<endl;
+  }
+  cout << "\n from end \n";
+  cutter2.end();
+  while( cutter2.fin() )
+  {
+    cout <<"\""<< cutter2.nextstep()<<"\""<<endl;
+  }
+  cout << "---------"<<cutter2.getdata()<<"-----------"<<endl;
+  cout << "-------------------------------------------"<<endl;  
+  cout << "\n from start \n";
+  cutter3.begin();
+  while( cutter3.fin() )
+  {
+    cout <<"\""<< cutter3.nextstep()<<"\""<<endl;
+  }
+  cout << "\n from end \n";
+  cutter3.end();
+  while( cutter3.fin() )
+  {
+    cout <<"\""<< cutter3.nextstep()<<"\""<<endl;
+  }
+  cout << "---------"<<cutter3.getdata()<<"-----------"<<endl;
+  cout << "-------------------------------------------"<<endl;
 
-  TestController controller
-    ("/home/projects/simon/f9/simon_proj/Testprogramm/tests/testfiles/mod.txt",
-     "/home/simon/Documents/CPP_TESTS/testfiles/test.csv",
-     "/home/simon/Documents/CPP_TESTS/cfg/ict_cfg.cfg");
-
-
-  /*TestController controller
-     ("/home/projects/simon/x1/verification/testprograms/test_ch_enable/sim_model.generic..vcs_rtl_gf40/mod.txt",
-     "test.csv", ""); */
-
-  //controller.startRoutine ();
-
-
-/*
-  string bin = "/usr/bin/make";
-  string param =
-    " -C /home/projects/simon/f9/verification/testprograms/test_dfa_ecc_40_single_sector/";
-  string target = " compile";
-  char **argv = NULL;
-  argv = (char **) calloc (4, sizeof (char *));
-  argv[0] = (char *) calloc (bin.length (), sizeof (char));
-  argv[1] = (char *) calloc (param.length (), sizeof (char));
-  argv[2] = (char *) calloc (target.length (), sizeof (char));
-  argv[3] = NULL;
-
-  argv[0] = (char *) (bin.c_str ());
-  argv[1] = (char *) (param.c_str ());
-  argv[2] = (char *) (target.c_str ());
-  cout << argv[0] << argv[1] << argv[2] << endl;
-*/
 
   return 0;
+
 }
