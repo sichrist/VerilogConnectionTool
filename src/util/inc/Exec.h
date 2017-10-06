@@ -14,7 +14,6 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <sys/wait.h>		// Waitpid
-# include "thread.h"
 
 using namespace std;
 

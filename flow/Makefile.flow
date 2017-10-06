@@ -1,4 +1,21 @@
 
+FLOW_PATH:=$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
+PROJ_PATH = $(FLOW_PATH:%flow=%)
+
+
+CC =g++
+#CFLAGS =-Wall -pedantic -Werror -g -I$(IDIR) -std=c++0x -pthread
+CFLAGS =-Wall -pedantic -Werror
+LDFLAGS = -lpthread -lrt
+PRNTFLAGS =--no-print-directory
+
+OBJ_PATH=$(PROJ_PATH)obj
+SRC_PATH=$(PROJ_PATH)src
+UTI_PATH=$(PROJ_PATH)util/inc/ 
+CON_PATH=$(PROJ_PATH)ctrl/inc/
+MOD_PATH=$(PROJ_PATH)model/inc/ 
+
+
 SRC = ../src/
 HDR = ../header/
 LIB = ../lib/src/
@@ -24,13 +41,11 @@ BOOST_LIB = $(BOOST)stage/lib/libboost_regex.a $(BOOST)stage/lib/libboost_iostre
 
 #INDENT_OPTIONS = -i8 -nbap -nbad -bli0 -di16 -blf -nbad -l100
 INDENT_OPTIONS = 
-CC =g++
-CFLAGS =-Wall -pedantic -Werror -g -I$(IDIR) -std=c++0x -pthread
-LDFLAGS = -lpthread -lrt
-PRNTFLAGS =--no-print-directory
 
-FLOW_PATH = $(PWD)
-NEW_PATH = $(shell pwd)
-PROJ_PATH = $($(FLOW_PATH):/flow=)
-OBJ_PATH=$(PROJ_PATH)/obj
+
+
+
+
+
+
 

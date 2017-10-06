@@ -5,7 +5,7 @@
 * @Last Modified time: 2017-09-19 11:05:22
 */
 #include "module.h"
-#include "parser.h"
+//#include "parser.h"
 
 #include <iostream>
 #include <string>
@@ -69,7 +69,7 @@ Instance::setlabel ()
       label = "";
       return;
     }
-
+/*
   Parser parser;
   parser.setstring (name);
   parser.setdelimiter ('.');
@@ -87,5 +87,5 @@ Instance::setlabel ()
       label = "";
       return;
     }
-
+*/
 }

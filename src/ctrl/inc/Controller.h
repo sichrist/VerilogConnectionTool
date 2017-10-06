@@ -11,6 +11,7 @@
 # include <dirent.h>
 # include "Filehandler.h"
 # include "parser.h"
+# include "Cutter.h"
 # include "modhandler.h"
 
 # define BOLD     "\033[1m"
@@ -50,39 +51,6 @@ struct Parameter
 
 };
 
-
-
-/***
-
-	splits a path of a File into directory and filename
-
-***/
-
-class Path
-{
-private:
-  string path;			// Path to the file
-  string pathfolder;		// path to the folder which contains the file
-  string filename;		// filename
-  char delim;			// delimiter 
-  void process ();
-public:
-    Path ();			// Constructor
-   ~Path ();			// Destructor
-    Path (string path_pa);
-
-
-
-
-    Path (string path_pa, char delim_pa);
-  void setpath (string path_pa);	// Will set the path and split it delimiter is '/'
-  void setpath (string path_pa, char delim_pa);	// Will set the path and split it by delimiter
-  string getpath ();		// returns the path
-  string getpathfolder ();	// returns the path to the folder which contains the file
-  string getfilename ();	// returns the filename
-  bool exists (string path_pa);	// checks if the given path exists
-  bool exists ();		// checks if the path set by setpath(path) exists
-};
 
 typedef struct
 {
