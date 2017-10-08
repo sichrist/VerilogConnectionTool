@@ -1,14 +1,20 @@
 include ../../flow/Makefile.flow
-LIB_H 	:= inc/
-IDIR 	:= -I$(LIB_H)
-SRC 	:= $(wildcard src/*.cpp)
-BNC_SRC	:= $(SRC:src/%.cpp=%)
-.PHONY: $(PROJ_PATH)obj/Path.o
 
-build: $(PROJ_PATH)obj/$(BNC_SRC).o
+#LIB_H 	:= inc/
+#IDIR 	:= -I$(LIB_H)
+#SRC 	:= $(wildcard src/*.cpp)
+#BNC_SRC	= $(SRC:src/%.cpp=%)
+#OBJS   = $(BNC_SRC:%=$(PROJ_PATH)obj/%.o)
 
-$(PROJ_PATH)obj/%.o : src/%.cpp
-	@mkdir -p $(dir $@)
-	@echo "============="
-	@echo "Compiling $<"
-	$(CC) -c $(CFLAGS) $(IDIR) $@ $<
+#build: output $(OBJS)
+		
+#output: clean
+#	@echo "Compiling: $(BNC_SRC)"	
+
+#$(PROJ_PATH)obj/%.o : src/%.cpp
+#	@mkdir -p $(dir $@)§""
+#	$(CC) -c $(CFLAGS) $(IDIR) -o $@ $<
+
+#clean:
+#	@rm -f $(OBJS)
+

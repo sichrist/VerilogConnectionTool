@@ -10,7 +10,6 @@
 
 # include <dirent.h>
 # include "Filehandler.h"
-# include "parser.h"
 # include "Cutter.h"
 # include "modhandler.h"
 

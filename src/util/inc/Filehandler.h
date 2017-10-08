@@ -14,35 +14,24 @@
 # include "Exec.h"
 # include "Cutter.h"
 # include <sstream>
-#include <boost/regex.hpp>
-#include <boost/iostreams/device/mapped_file.hpp>
+# include <boost/regex.hpp>
+# include <boost/iostreams/device/mapped_file.hpp>
+# include "IOcon.h"
 
-
-using namespace
-  boost::iostreams;
-using namespace
-  std;
+using namespace  boost::iostreams;
+using namespace  std;
 
 #define SSTR( x ) static_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
 
-class
-  IOcon;
-
-class
-  Filehandler
+class Filehandler
 {
 protected:
-  ifstream
-    read;
-  ofstream
-    write;
-  string
-    path;
-  long
-    start;
-  long
-    end;
+  ifstream    read;
+  ofstream    write;
+  string    path;
+  long    start;
+  long    end;
 
 public:
   Filehandler ();
@@ -87,15 +76,6 @@ public:
   void  add (int row, int col);
 };
 
-enum Type
-{
-  MODU,
-  INST,
-  WIRE,
-  MODU_REV,
-  OPEN_PORT
-};
-
 typedef struct
 {
   string    content;
@@ -136,85 +116,6 @@ public:
   void  insert (long start, long end, string buffer);
   void  parse ();
 };
-
-
-typedef struct
-{
-  string *    name;
-  string *    type;
-  string *    bitwith;
-} Cons;
-
-
-enum ConType
-{
-  module,
-  instantiation,
-  wire,
-  modulerev
-};
-
-/***
-
-	cons[0]  -> type
-			 -> bitwith
-			 -> name
-	cons[1]	 -> ....
-		.
-		.
-		.
-	cones[size-1] ...
-
-***/
-
-class
-  IOcon
-{
-
-private:
-  static const    string    MODULE_COMMENT;
-  static const    string    INSTAN_COMMENT;
-  static const    string    WIRE_COMMENT;
-  static const    string    END_COMMENT;
-  Cutter    ios;
-  string    name;
-  string 	openPortInp;
-  string    def;
-  string    defrev;
-  string    ins;
-  string    expr_name;
-  string 	error_msg;
-  Cons *    cons;
-  // if status is 1 sth. went wrong with the input of the ios
-  bool status;
-  int    	size;
-  bool splitIOinput( string input );
-
-public:
-  IOcon (Cutter ios);
-  ~IOcon ();
-  void  parse ();
-  string  getDef ();
-  string  getIns ();
-  string  getDefrev ();
-  string  getname ();
-
-  string  getModComment ();
-  string  getInsComment ();
-  string  getWirComment ();
-  string  getEndComment ();
-
-  string  buildNormal (Type type);
-  string  buildOld (bool section, Type type);
-  string  buildWire ();
-
-  bool  getstatus();
-  string  geterrormsg();
-  int     getsize ();
-  Cons    *getcons ();
-  Cutter  getios ();
-};
-
 
 
 

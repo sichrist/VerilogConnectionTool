@@ -89,6 +89,9 @@ public:
 	// get-methods
 	string getdata();
 
+	// makes sure that a delimiter do not follow a delimiter
+	void decimate();
+
 	char getdelimiter();
 
 	size_t getposleft();

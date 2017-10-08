@@ -9,12 +9,11 @@ CFLAGS =-Wall -pedantic -Werror
 LDFLAGS = -lpthread -lrt
 PRNTFLAGS =--no-print-directory
 
-OBJ_PATH=$(PROJ_PATH)obj
-SRC_PATH=$(PROJ_PATH)src
-UTI_PATH=$(PROJ_PATH)util/inc/ 
-CON_PATH=$(PROJ_PATH)ctrl/inc/
-MOD_PATH=$(PROJ_PATH)model/inc/ 
-
+OBJ_PATH=$(PROJ_PATH)obj/
+SRC_PATH=$(PROJ_PATH)src/
+UTI_PATH=$(SRC_PATH)util/inc/ 
+CON_PATH=$(SRC_PATH)ctrl/inc/
+MOD_PATH=$(SRC_PATH)model/inc/ 
 
 SRC = ../src/
 HDR = ../header/
@@ -42,7 +41,7 @@ BOOST_LIB = $(BOOST)stage/lib/libboost_regex.a $(BOOST)stage/lib/libboost_iostre
 #INDENT_OPTIONS = -i8 -nbap -nbad -bli0 -di16 -blf -nbad -l100
 INDENT_OPTIONS = 
 
-
+include $(FLOW_PATH)/Makefile.rules
 
 
 

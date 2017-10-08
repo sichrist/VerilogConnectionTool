@@ -1,36 +1,26 @@
 
-#include "Filehandler.h"
+#include "IOcon.h"
 
 
-const string
-  IOcon::MODULE_COMMENT =
+const string  IOcon::MODULE_COMMENT =
   "\n\n//-=-=-=-=-=-=-=-=-=-=-\n//\n//The following IO's\n//are automatically \n//generated \n//\n";
-const
-  string
-  IOcon::INSTAN_COMMENT =
+const  string  IOcon::INSTAN_COMMENT =
   "\n\n//-=-=-=-=-=-=-=-=-=-=-\n//\n//The following connections\n//are automatically \n//generated \n//\n";
-const
-  string
-  IOcon::WIRE_COMMENT =
+const  string  IOcon::WIRE_COMMENT =
   "\n\n//-=-=-=-=-=-=-=-=-=-=-\n//\n//The following wires\n//are automatically \n//generated \n//\n";
-const
-  string
-  IOcon::END_COMMENT = "\n\n//\n//-=-=-=-=-=-=-=-=-=-=-\n\n";
+const  string  IOcon::END_COMMENT = "\n\n//\n//-=-=-=-=-=-=-=-=-=-=-\n\n";
 
-static
-  string
-invert (string type)
+
+static  string invert (string type)
 {
-  if (!type.find ("input"))
+    if (!type.find ("input"))
     {
-      return "output";
+        return "output";
     }
-  if (!type.find ("output"))
-    return "input";
-  return type;
+    if (!type.find ("output"))
+        return "input";
+    return type;
 }
-
-
 
 /***
 
@@ -49,104 +39,94 @@ string IOcon::buildOld (bool section, Type type)
   string context = "";
 
 
-  if (!section)
+    if (!section)
     {
-      for (int i = 0; i < size; i++)
-	context += "\t\t" + *cons[i].name + "\t,\n";
+        for (int i = 0; i < size; i++)
+            context += "\t\t" + cons[i].name + "\t,\n";
     }
-  else
+    else
     {
-      for (int i = 0; i < size; i++)
-	if (type == MODU_REV)
-	  {
-	    context += "\t\t" + invert (*cons[i].type)
-	      + " \t" + *cons[i].bitwith + " \t" + *cons[i].name + "\t;\n";
-	  }
-	else
-	  {
-	    context +=
-	      "\t\t" + *cons[i].type + " \t" + *cons[i].bitwith + " \t" +
-	      *cons[i].name + "\t;\n";
-	  }
+        for (int i = 0; i < size; i++)
+            if (type == MODU_REV)
+            {
+                context += "\t\t" + invert (cons[i].type)+ " \t" + cons[i].bitwith + " \t" + cons[i].name + "\t;\n";
+            }
+            else
+            {
+                context += "\t\t" + cons[i].type + " \t" + cons[i].bitwith + " \t" + cons[i].name + "\t;\n";
+            }
     }
 
     
   return context;
 }
 
-string
-IOcon::buildNormal (Type type)
+
+string IOcon::buildNormal (Type type)
 {
   string context = "";
 
-  if (type == INST)
+    if (type == INST)
     {
-      for (int i = 0; i < size; i++)
-	{
-	  context += "\t\t." + *cons[i].name + "\t( " + *cons[i].name + " ),\n";
-	}
+        for (int i = 0; i < size; i++)
+        {
+            context += "\t\t." + cons[i].name + "\t( " + cons[i].name + " ),\n";
+        }
+    return context;
+    }
+    
+    if (type == OPEN_PORT)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            context += "\t\t." + cons[i].name + "\t( "+openPortInp+" ),\n";
+        }
       return context;
     }
-  if (type == OPEN_PORT)
+    
+    for (int i = 0; i < size; i++)
     {
-      for (int i = 0; i < size; i++)
-	{
-	  context += "\t\t." + *cons[i].name + "\t( "+openPortInp+" ),\n";
-	}
-      return context;
+        if (type == MODU_REV)
+    	{
+    	  context += "\t\t" + invert (cons[i].type) + " \t";
+    	}
+        else
+        {
+    	  context += "\t\t" + cons[i].type + " \t";
+        }
+      context += cons[i].bitwith + "\t";
+      context += cons[i].name + "\t,\n";
     }
-  for (int i = 0; i < size; i++)
-    {
-      if (type == MODU_REV)
-	{
-	  context += "\t\t" + invert (*cons[i].type) + " \t";
-	}
-      else
-	{
-	  context += "\t\t" + *cons[i].type + " \t";
-	}
-      context += *cons[i].bitwith + "\t";
-      context += *cons[i].name + "\t,\n";
-    }
-  return context;
+    return context;
 }
 
-string
-IOcon::buildWire ()
+
+string IOcon::buildWire ()
 {
 
-  string context = "";
-  for (int i = 0; i < size; i++)
+    string context = "";
+    for (int i = 0; i < size; i++)
     {
-      context += "wire\t" + *cons[i].bitwith + "\t" + *cons[i].name + "\t;\n";
+        context += "wire\t" + cons[i].bitwith + "\t" + cons[i].name + "\t;\n";
     }
-  return context;
+    return context;
 }
 
 
-IOcon::IOcon (Parser ios)
+IOcon::IOcon (string ios)
 {
  
-  size = 0;
   status = 0;
   cons = NULL;
   error_msg = "";
   openPortInp = " ";
+
   this->ios = ios;
 
   parse ();
 
- 
-  if( status )
-    return;
-  int ctr = size;
-
-  for (int i = 0; i < ctr; i++)
-    {
-      this->name += *cons[i].name + ",\n";
-    }
-
 }
+
 
 inline int cntChar( string in, char del )
 {
@@ -158,145 +138,96 @@ inline int cntChar( string in, char del )
     }
     return nmbr;
 }
-// splits the string "type bitwith name" and places it in cons
 
-inline bool IOcon::splitIOinput( string ios )
+
+// Removes leading spaces and spaces a the end
+
+string IOcon::removespaceat( string ios )
 {
-    if(ios == "")
-        return 1;
-    int nbrspace = 0;
-    string name_tmp = "";
-    string bitw_tmp = "";
-    string type_tmp = "";
-    std::size_t found;   
-    Parser spaceparser;
+	string tmp;
+	unsigned int i = 0;
 
-    nbrspace = cntChar( ios, ' ' );
-    if( nbrspace > 2 || nbrspace < 1 )
-    {
-        error_msg = "Input parsing went wrong: \""+ios+"\"\n"+"max 2 spaces min 1!\n"+"Example: type bitwith name|type name\n";
-        goto error;
-    }
+	for( i = 0; i < ios.size(); i++)
+	{
+		if( ios[i] != ' ')
+			break;
+	}
 
-    
-    spaceparser.setstring( ios );
-    spaceparser.setdelimiter( ' ' );
-    spaceparser.singleparse();
-   
-    name_tmp = spaceparser.getnextbw();
-    bitw_tmp = spaceparser.getnextbw();
-    found = bitw_tmp.find("[");
-    if(!found)
-    {
-      type_tmp = spaceparser.getnextbw();
-    }
-    else
-    {
-      type_tmp = bitw_tmp;
-      bitw_tmp = "";
-    }
+	tmp = ios.substr(i, ios.size() - i);
+	ios = tmp;
 
-    // process the input of open ports
+	for( i = ios.size()-1; i > 0; i-- )
+	{
+		if( ios[i] != ' ')
+			break;
+	}
+	tmp = ios.substr(0,i+1);
+	ios = tmp;
 
-    
-    found = name_tmp.find("(");
-
-    if( found!=std::string::npos )
-    {
-        std::size_t found_tmp = found;
-        found = name_tmp.find(")");
-        if( found!=std::string::npos )
-        {
-            openPortInp = name_tmp.substr(found_tmp+1, found - found_tmp -1 );
-        }
-        string tmp = name_tmp.substr(0,found_tmp);
-        name_tmp = tmp;
-
-    }
-
-    if( name_tmp == ""|| type_tmp == ""){   
-        error_msg = "Input parsing went wrong: \""+type_tmp+" "+bitw_tmp+" "+name_tmp+"\"\n";
-        goto error;
-    }
-
-    cons[size].name = new string(name_tmp);
-    cons[size].bitwith = new string(bitw_tmp);
-    cons[size].type = new string(type_tmp);
-
-    size++;
-
-    return 0;
-
-    error:
-        status = 1;
-        return 1;
+	return ios;
 }
+
+
+inline Cons IOcon::split( string io)
+{
+    Cons ret;
+
+    io = removespaceat(io);
+
+    Cutter cut(io,' ');
+    cut.decimate();
+    cut.end();
+
+  
+    ret.name = cut.next();
+    ret.bitwith = cut.next();
+    ret.type = cut.next();
+
+    if(ret.type == "")
+    {
+        ret.type = ret.bitwith;
+        ret.bitwith = "";
+    }
+
+	if( cut.getsize() > 2 )
+	{
+		status = 1;
+		error_msg = "Couldn't parse ios correctly: \""+io+"\"\n";
+	}
+
+	return ret;
+}
+
 
 IOcon::~IOcon ()
 {
-  for (int i = 0; i < size; i++)
-    {
-
-/*
-      delete cons[i].name;
-      delete cons[i].type;
-      delete cons[i].bitwith;
-*/
-    }
-
-  //delete[]cons;
+	delete [] cons;
 }
 
 
-void IOcon::parse ()
+void IOcon::parse()
 {
+  string tmp;
+  stack<string> data;
 
-  string tmp = "";
-  string tmp1 = "";
-  string tmp2 = "";
-  string input = "";
+  // seperate Io's
+  Cutter cutter(ios,'|');
+  cutter.begin();
+  while( cutter.fin() )
+  {
+    tmp=cutter.next();
+    if(tmp != "")
+      data.push(tmp);
+  }
+  size = data.size();
+  cons = new Cons[size];
 
-  ios.singleparse ();
-  tmp = " ";
-  std::size_t found;
-
-  if (cons != NULL)
-    delete[]cons;
-
-  cons = new Cons[ios.getsize ()];
-
-  while (tmp != "")
-    {
-      tmp = ios.getnextbw ();
-      found = tmp.find("#");
-
-      if( found!=std::string::npos )
-      {
-        error_msg = "Character \'#\' found in io-part of the inputfile.\n Remove this Character!\n";
-        status = 1;
-        return;
-      }
-
-      tmp1 = tmp1 + "#" + tmp;
-    }
-
-  tmp2 = ios.getstring ();
-  ios.setstring (tmp1);
-  ios.setdelimiter ('#');
-  ios.singleparse ();
-
-  tmp = ios.getnextbw ();
-  tmp = " ";
-
-  while (tmp != "")
-    {
-        input = ios.getnextbw ();
-        if( splitIOinput( input ) )
-            break;
-
-    }
-
-    
+  for(int i=0; i < size; i++)
+  {
+    cons[i] = split( data.top() );
+    data.pop();
+  }
+  
 }
 
 string IOcon::geterrormsg()
@@ -312,40 +243,6 @@ bool IOcon::getstatus()
 int IOcon::getsize ()
 {
   return this->size;
-}
-
-Cons *IOcon::getcons ()
-{
-  return this->cons;
-}
-
-Parser IOcon::getios ()
-{
-  return this->ios;
-}
-
-string
-IOcon::getDef ()
-{
-  return this->def;
-}
-
-string
-IOcon::getDefrev ()
-{
-  return this->defrev;
-}
-
-string
-IOcon::getIns ()
-{
-  return this->ins;
-}
-
-string
-IOcon::getname ()
-{
-  return this->name;
 }
 
 string

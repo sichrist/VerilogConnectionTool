@@ -15,6 +15,8 @@ Cutter::Cutter( string str, char delim )
 Cutter::~Cutter()
 {
 	delete [] positions;
+	positions 	= NULL;
+	p_l = p_r 	= NULL;
 }
 
 void Cutter::cnt( )
@@ -51,6 +53,7 @@ void Cutter::set( string str, char delim )
 	cnt();
 
 	positions = new size_t[size];
+
 	for( unsigned int i=0; i< size; i++)
 		positions[i] = 0;
 
@@ -161,6 +164,25 @@ string Cutter::next()
 		--len;
 	}
 	return data.substr(start,len);
+}
+
+void Cutter::decimate()
+{
+	int cntdel = 0;
+	string tmp;
+	for( unsigned int i = 0; i < data.size(); i++ )
+	{
+		if( data[i] != delimiter )
+			cntdel = 0;
+		if( data[i] == delimiter )
+			cntdel++;
+		if( cntdel > 1)
+			continue;
+
+		tmp += data[i];
+	}
+
+	set( tmp, delimiter );
 }
 
 bool Cutter::fin()
