@@ -1,0 +1,29 @@
+:::Module: top|
+:::Instance: top|
+:::Inst in Module: (null)|
+:::LEVEL: 0
+:::Path of instance: /home/simon//Arbeitsverzeichnis/CPP_TESTS/verilogtest/top.v|
+:::Path of module: /home/simon//Arbeitsverzeichnis/CPP_TESTS/verilogtest/top.v|
+:::STOP:::
+:::Module: testmodule_a|
+:::Instance: top.test_top_1|
+:::Inst in Module: top|
+:::LEVEL: 1
+:::Path of instance: /home/simon//Arbeitsverzeichnis/CPP_TESTS/verilogtest/top.v|
+:::Path of module: /home/simon//Arbeitsverzeichnis/CPP_TESTS/verilogtest/inst1.v|
+:::STOP:::
+:::Module: testmodule_b|
+:::Instance: top.test_top_2|
+:::Inst in Module: top|
+:::LEVEL: 1
+:::Path of instance: /home/simon//Arbeitsverzeichnis/CPP_TESTS/verilogtest/top.v|
+:::Path of module: /home/simon//Arbeitsverzeichnis/CPP_TESTS/verilogtest/inst2.v|
+:::STOP:::
+:::Module: testmodule_c|
+:::Instance: top.test_top_2.testinstance|
+:::Inst in Module: testmodule_b|
+:::LEVEL: 1
+:::Path of instance: /home/simon//Arbeitsverzeichnis/CPP_TESTS/verilogtest/inst2.v|
+:::Path of module: /home/simon//Arbeitsverzeichnis/CPP_TESTS/verilogtest/inst3.v|
+:::STOP:::
+
