@@ -68,18 +68,34 @@ filelistOpenPorts (Instance * instance, map < string, string > *paths)
 inline string Connection::getsamehierarchy( string inst_1, string inst_2 )
 {
 
-  Parser insPath_1;
-  Parser insPath_2;
+	Cutter insPath_1(inst_1,'.');
+	Cutter insPath_2(inst_2,'.');
+	string ret;
+   	string tmp ,tmp_1, tmp_2;
 
-  insPath_1.setstring(inst_1);
-  insPath_1.setdelimiter('.');
-  insPath_1.parse ();
 
-  insPath_2.setstring(inst_2);
-  insPath_2.setdelimiter('.');
-  insPath_2.parse ();
+   	insPath_1.begin();
+   	insPath_2.begin();
 
-  return insPath_1.getsamehier(insPath_2);
+	while( insPath_1.fin() || insPath_2.fin() )
+	{
+		tmp_1 = insPath_1.next();
+		tmp_2 = insPath_2.next();
+		if( tmp_1 == tmp_2 )
+		{
+			tmp += tmp_1 + ".";
+		}
+	}
+
+	if( tmp[tmp.size()-1] == '.')
+		ret = tmp.substr(0,tmp.size()-2);
+	else
+	{
+		ret = tmp;
+	}
+
+
+  return ret;
 
 }
 
@@ -92,19 +108,13 @@ inline  map < int, modifyUnit * > *Connection::buildConnectiontree( Modhandler *
 	Instance *instance  				= NULL	;
 	Module *mod 						= NULL	;
 
-	Parser insPath;
-	Parser insName;
+	Cutter insPath(instance,'.');
+	Cutter insName(instance,'.');
+
 	retmap = new map < int, modifyUnit * >;
 
-	insPath.setstring (inst1);
-	insPath.setdelimiter ('.');
-	insPath.parse ();
-	insPath.checkforbracket ();
-	
-	insName.setstring (inst1);
-	insName.setdelimiter ('.');
-	insName.singleparse ();
-
+	insPath.begin();
+	insName.end();
 
 	for (int i = 0; (instpath = insPath.getnext ()) != hierarchy; i++)
 	{
@@ -112,9 +122,10 @@ inline  map < int, modifyUnit * > *Connection::buildConnectiontree( Modhandler *
 		if( instpath == "" )
 			break;
 		instance 		= 	modhandler->getInstance( instpath );
-		instname 		= insName.getnextbw();
+		instname 		= insName.next();
 		(*retmap)[i]	= 	new modifyUnit (vfile, vfile, instance, con_, instname);
 	}
+
 
 	return retmap;
 }
@@ -128,7 +139,7 @@ Connection::Connection (Modhandler * mod, Parser * con, string inst1,
 
 // Builds the Connection Object
 
-Connection::Connection (Modhandler *mod, Parser *ios, string inst1, string inst2 , Parameter param)
+Connection::Connection (Modhandler *mod, string ios, string inst1, string inst2 , Parameter param)
 {
 
     // neutralize

@@ -244,7 +244,6 @@ void Controller::start ()
 		continue;
 	}
 
-		cout << "ADRESSE: "<< illegal << " - "<<warning<<endl;
 		if (conObj->checkIllegalPaths (warning, illegal ) )
 		{
 			cerr << "CONNECTION : "+(*input)[i]->inst1 + "\t" + (*input)[i]->inst2+ " is illegal"<<endl;
