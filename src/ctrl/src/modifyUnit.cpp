@@ -5,8 +5,7 @@
 * @Last Modified time: 2017-09-28 15:07:31
 */
 
-
-#include "Controller.h"
+# include "modifyUnit"
 
 
 modifyUnit::modifyUnit (verilogFile * vfile_inst, verilogFile * vfile_modu,

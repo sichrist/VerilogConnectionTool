@@ -30,6 +30,8 @@ public:
 
 	// Recycle the object
 	void set( string path, char delim );
+	
+	void set( string path );
 
 	// Returns the filename
 	string getfilename();

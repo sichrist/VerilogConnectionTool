@@ -3,12 +3,39 @@
 
 
 # include "Cutter.h"
-
+# include "Filehandler.h"
+# include "modifyUnit.h"
+# include "Path.h"
 /***
 
 	Connection 
 
 ***/
+
+
+struct Parameter
+{
+  Parameter (int v, int r, string c, map < int, string > *warn, map < int,
+       string > *ill, string fil, string mod, string in):verbose (v),
+    restore (r), cfg (c), warning (warn), illegal (ill), files (fil),
+    modtxt (mod), input (in)
+  {
+  };
+  Parameter (int v, int r, string cfg):verbose (v), restore (r), cfg (cfg)
+  {
+  };
+  int verbose;      // parameter for more Output
+  int restore;
+  string cfg;
+  map < int, string > *warning;
+  map < int, string > *illegal;
+  string files;
+  string modtxt;
+  string input;
+  string projectpath;
+
+};
+
 
 class Connection
 {
@@ -26,7 +53,7 @@ private:
   map < int, string > warning_paths;
 
   // contains warning paths
-    map < int, string > illegal_paths;
+  map < int, string > illegal_paths;
 
   // represents the Ios we want to add
   IOcon *con_;
@@ -34,7 +61,7 @@ private:
   // name of the instance where inst1 and inst2 meet
   string hierarchy;
 
-  // to the first instantiation 
+  // path to the first instantiation 
   string inst1;
 
   // path to the second instantiation
@@ -64,7 +91,9 @@ private:
   string getsamehierarchy( string inst_1, string inst_2 );
 
   // Helper for Constructor
-  map < int, modifyUnit * >buildConnectiontree( string instance );
+  map < int, modifyUnit * >buildConnectiontree( Modhandler *modhandler, string instPath );
+
+  modifyUnit *buildBridge( Modhandler *modhandler );
 
 public:
     
@@ -99,5 +128,6 @@ public:
     bool getstatus();
 
 };
+
 
 # endif

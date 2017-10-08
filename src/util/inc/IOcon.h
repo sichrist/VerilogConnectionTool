@@ -1,3 +1,5 @@
+# ifndef IOCON_H
+# define IOCON_H
 
 # include <string>
 # include "Cutter.h"
@@ -99,4 +101,4 @@ public:
   Cutter  getios ();
 };
 
-
+# endif

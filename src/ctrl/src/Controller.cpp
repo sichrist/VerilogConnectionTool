@@ -95,12 +95,6 @@ Controller::Controller (Parameter param)
   
 	this->modtxt = param.modtxt;
 	this->csvConnections = param.input;
-	this->instance1 = new Parser ();
-	this->instance2 = new Parser ();
-	this->connection = new Parser ();
-	this->instance1->setdelimiter ('.');
-	this->instance2->setdelimiter ('.');
-	this->connection->setdelimiter ('|');
 	this->mod = new Modhandler (modtxt);
 	this->cfg = cfg;
 	this->warning= param.warning;
@@ -116,12 +110,6 @@ Controller::Controller (string modtxt, string csvconn, string cfg)
 {
 	this->modtxt = modtxt;
 	this->csvConnections = csvconn;
-	this->instance1 = new Parser ();
-	this->instance2 = new Parser ();
-	this->connection = new Parser ();
-	this->instance1->setdelimiter ('.');
-	this->instance2->setdelimiter ('.');
-	this->connection->setdelimiter ('|');
 	this->mod = new Modhandler (modtxt);
 	this->cfg = cfg;
 	this->vfile = new verilogFile ();
@@ -160,9 +148,6 @@ Controller::parse_input (string csvpath)
 
 Controller::~Controller ()
 {
-	delete this->instance1;
-	delete this->instance2;
-	delete this->connection;
 	delete this->mod;
 	if (vfile != NULL)
 		delete vfile;
@@ -170,10 +155,9 @@ Controller::~Controller ()
 		delete this->csvfile;
 }
 
-Connection *
-Controller::buildConnectionObject (string inst1, string inst2, string con,string projpath)
+Connection *Controller::buildConnectionObject (string inst1, string inst2, string con,string projpath)
 {
-
+/*
 	Parser singleparse1;
 	Parser singleparse2;
 
@@ -212,7 +196,9 @@ Controller::buildConnectionObject (string inst1, string inst2, string con,string
 	}
 
 	return connection_;
+*/
 
+	return NULL;
 }
 
 void Controller::start ()

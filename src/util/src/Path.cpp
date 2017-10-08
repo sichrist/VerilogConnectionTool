@@ -61,6 +61,11 @@ Path::~Path()
 {
 }
 
+void Path::set( string path )
+{
+  set(path,'/');
+}
+
 void Path::set( string path, char delim )
 {
   data      = path;

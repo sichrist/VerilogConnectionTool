@@ -18,11 +18,12 @@
 # define ERROR  "\x1b[91m"
 # define FATAL  "\x1b[31m"
 
+/*
 void
 rsyncConObjs (map < string, string > *filelist, string dstfiles)
 {
 
-/*	ofstream write;
+	ofstream write;
 	//Path pathObject;
 	string arg = "";
 	static string filelisttxt = "filelist.txt";
@@ -44,9 +45,11 @@ rsyncConObjs (map < string, string > *filelist, string dstfiles)
 	if (arg.length () < 1)
 		return;
 	string cmd = "rsync -v " + arg + " " + dstfiles;
-	system ((const char *) cmd.c_str ());*/
+	system ((const char *) cmd.c_str ());
 }
+  */
 
+  /*
 void
 print_instantiations (Connection * conObj)
 {
@@ -71,9 +74,10 @@ print_instantiations (Connection * conObj)
     }
 
   cout << RESET;
-
 }
+*/
 
+  /*
 map < int, csvparse * >*
 parse_input (string csvpath)
 {
@@ -104,12 +108,14 @@ parse_input (string csvpath)
     }
   file.close ();
   return ret;
+  
 }
+  */
 
 
+/*
 TestController::TestController (string modtxt, string csvconn, string cfg)
 {
-
   map < int, csvparse * >*ret = NULL;
   ret = parse_input (csvconn);
   if (ret->size () == 0)
@@ -149,7 +155,7 @@ TestController::TestController (string modtxt, string csvconn, string cfg)
 
       if (conObj == NULL)
 	continue;
-
+*/
 //                        print_instantiations (conObj);
 
       /*     if (conObj->checkIllegalPaths
@@ -158,7 +164,7 @@ TestController::TestController (string modtxt, string csvconn, string cfg)
          delete conObj;
          continue;
          } */
-      rsyncfiles = conObj->getFileListOpenPorts ();
+ /*     rsyncfiles = conObj->getFileListOpenPorts ();
       rsyncConObjs (rsyncfiles, testfiles);
       rsyncfiles = conObj->getFileList ();
       rsyncConObjs (rsyncfiles, testfiles);
@@ -171,7 +177,6 @@ TestController::TestController (string modtxt, string csvconn, string cfg)
 
 
 
-
     }
 
   //compileVCS ();
@@ -179,24 +184,27 @@ TestController::TestController (string modtxt, string csvconn, string cfg)
   cout << WARN << "ENDE" << RESET << endl;
 
 }
-
+*/
+/*
 TestController::~TestController ()
 {
   //clean ("/home/simon/Documents/CPP_TESTS/testfiles/");
   //clean ("/home/simon/Documents/CPP_TESTS/bin/");
 }
-
+*/
+/*
 void
 TestController::clean (string path)
 {
   string cmd = "rm -f " + path + "*.v*";
   system ((const char *) cmd.c_str ());
 }
+*/
 
+  /*ifstream read;
 void
 TestController::restoreOriginalFiles (string testfiles)
 {
-  ifstream read;
   read.open (testfiles + "filelist.txt");
   string file;
   string path;
@@ -227,15 +235,18 @@ TestController::restoreOriginalFiles (string testfiles)
       system ((const char *) buffer.c_str ());
     }
   read.close ();
+
+  */
 /*	ofstream write;
 	write.open (testfiles + "filelist.txt", std::ofstream::trunc);
-	write.close ();*/
+	write.close ();
 }
+  */
 
+/*
 void
 TestController::compileVCS ()
 {
-
 
   pid_t child;
 
@@ -243,7 +254,7 @@ TestController::compileVCS ()
   char *args1[] = {
     (char *) "make", (char *) "-C",
     (char *)
-      "/home/projects/simon/f9/verification/testprograms/test_dfa_ecc_40_single_sector/",
+
     (char *) "compile", NULL
       //(char *) "sim_gui", NULL
   };
@@ -252,7 +263,7 @@ TestController::compileVCS ()
     (char *) "make",
     (char *) "-C",
     (char *)
-      "/home/projects/simon/f9/verification/testprograms/test_dfa_ecc_40_single_sector/",
+      
     (char *) "clean", NULL
   };
 
@@ -290,5 +301,5 @@ TestController::compileVCS ()
 	    endl;
 	}
     }
-
 }
+*/

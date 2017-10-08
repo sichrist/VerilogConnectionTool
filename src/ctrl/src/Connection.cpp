@@ -14,7 +14,6 @@ filelist (Instance * instance, map < string, string > *paths)
 {
   string def_path = "";
   string ins_path = "";
-  Path pathObject;
 
   Module *mod = NULL;
   mod = instance->getdef ();
@@ -25,7 +24,8 @@ filelist (Instance * instance, map < string, string > *paths)
   mod = instance->getins ();
   ins_path = mod->getpath ();
 
-  pathObject.setpath (def_path);
+  Path pathObject(def_path);
+  
   (*paths)[pathObject.getfilename ()] = pathObject.getpathfolder ();
 
   pathObject.setpath (ins_path);
@@ -99,7 +99,23 @@ inline string Connection::getsamehierarchy( string inst_1, string inst_2 )
 
 }
 
-inline  map < int, modifyUnit * > *Connection::buildConnectiontree( Modhandler *modhandler, string instance )
+inline modifyUnit *Connection::buildBridge( Modhandler *modhandler )
+{
+	modifyunit *retUnit = NULL;
+	Instance *instance = NULL;
+	string instname;
+
+	Cutter cutter(hierarchy);
+	cutter.end();
+
+	instname = cutter.next();
+	instance = modhandler->getInstance(hierarchy);
+
+	return new modifyunit(vfile, vfile, instance, con_, instname );
+
+}
+
+inline  map < int, modifyUnit * > *Connection::buildConnectiontree( Modhandler *modhandler, string instPath )
 {
 
 	string instpath 					= ""	;
@@ -108,8 +124,8 @@ inline  map < int, modifyUnit * > *Connection::buildConnectiontree( Modhandler *
 	Instance *instance  				= NULL	;
 	Module *mod 						= NULL	;
 
-	Cutter insPath(instance,'.');
-	Cutter insName(instance,'.');
+	Cutter insPath(instPath,'.');
+	Cutter insName(instPath,'.');
 
 	retmap = new map < int, modifyUnit * >;
 
@@ -152,7 +168,7 @@ Connection::Connection (Modhandler *mod, string ios, string inst1, string inst2 
 	// initialize
 
 	vfile 		= new verilogFile( param.projectpath + PYTHON_BIN_PATH, "" );
-	con_ 		= new IOcon( *con );
+	con_ 		= new IOcon( ios );
 
 	// check if building the IOs was successfull
 
@@ -162,7 +178,8 @@ Connection::Connection (Modhandler *mod, string ios, string inst1, string inst2 
 	hierarchy 	= getsamehierarchy( inst1, inst2 );
 	con1 		= buildConnectiontree( inst1 );
 	con2 		= buildConnectiontree( inst2 );
-	//bridge 		= 
+
+	bridge 		= buildBridge();
 
 
 

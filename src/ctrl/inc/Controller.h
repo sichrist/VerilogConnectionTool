@@ -12,6 +12,9 @@
 # include "Filehandler.h"
 # include "Cutter.h"
 # include "modhandler.h"
+# include "Connection.h"
+# include "modifyUnit.h"
+# include "Path.h"
 
 # define BOLD     "\033[1m"
 # define YELLOW "\x1b[97m"
@@ -25,30 +28,6 @@
 
 #define PYTHON_BIN_PATH "py/vparser.py"
 
-class Connection;
-
-struct Parameter
-{
-  Parameter (int v, int r, string c, map < int, string > *warn, map < int,
-	     string > *ill, string fil, string mod, string in):verbose (v),
-    restore (r), cfg (c), warning (warn), illegal (ill), files (fil),
-    modtxt (mod), input (in)
-  {
-  };
-  Parameter (int v, int r, string cfg):verbose (v), restore (r), cfg (cfg)
-  {
-  };
-  int verbose;			// parameter for more Output
-  int restore;
-  string cfg;
-  map < int, string > *warning;
-  map < int, string > *illegal;
-  string files;
-  string modtxt;
-  string input;
-  string projectpath;
-
-};
 
 
 typedef struct
@@ -103,46 +82,6 @@ public:
   void connect (string inst1, string inst2, string con);
   void restoreFiles ();
   void cleanDirs (string path, string pattern);
-
-};
-
-/***
-
-	modifyUnit represents one instance given by a path
-
-***/
-
-class modifyUnit
-{
-private:
-  string instname;		// instancename
-  Instance *inst;
-  IOcon *con;
-  verilogFile *vfile_inst;
-  verilogFile *vfile_modu;
-
-public:
-
-    modifyUnit (verilogFile * vfile_inst, verilogFile * vfile_modu,
-		Instance * inst, IOcon * con, string instname);
-   ~modifyUnit ();
-  // adds Ios to module definition
-  void addIos ();
-
-  // adds Ios to the module definition, but inverts its type
-  void addInvertedIos ();
-
-  //      connects Ios via instantiation
-  void connectIos ();
-
-  // connects Instances via wires
-  void connectInstances (modifyUnit * u1, modifyUnit * u2);
-
-  // Connects the open Ports
-  void handleOpenPorts ();
-
-  // returns the instance
-  Instance *getInstance ();
 
 };
 
