@@ -66,8 +66,7 @@ public:
 
   csvFile ();
   csvFile (string path);
-  ~
-  csvFile ();
+  ~csvFile ();
   string  get (int row, int col);
   void  setdelimiter (char del);
   void  set (int row, int col, string str);

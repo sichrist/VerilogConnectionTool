@@ -100,7 +100,6 @@ Controller::Controller (Parameter param)
 	this->warning= param.warning;
 	this->illegal= param.illegal;
 	this->vfile = new verilogFile (param.projectpath + "py/vparser.py", "");
-	this->csvfile = NULL;
 	this->backupfolder = param.files;
 	this->param = &param;
 	this->projectpath = param.projectpath;
@@ -113,11 +112,9 @@ Controller::Controller (string modtxt, string csvconn, string cfg)
 	this->mod = new Modhandler (modtxt);
 	this->cfg = cfg;
 	this->vfile = new verilogFile ();
-	this->csvfile = NULL;
 }
 
-map < int, csvparse * >*
-Controller::parse_input (string csvpath)
+map < int, csvparse * >*Controller::parse_input (string csvpath)
 {
 	string fileContent;
 	mapped_file_source file;
@@ -151,8 +148,6 @@ Controller::~Controller ()
 	delete this->mod;
 	if (vfile != NULL)
 		delete vfile;
-	if (csvfile != NULL)
-		delete this->csvfile;
 }
 
 Connection *Controller::buildConnectionObject (string inst1, string inst2, string con,string projpath)
@@ -208,6 +203,7 @@ void Controller::start ()
 	map < string, string > *rsyncfiles = NULL;
 	map < int, csvparse * >*input = parse_input (csvConnections);
 
+	cout << "HALLO" << input->size()<<endl;
 	for (unsigned int i = 0; i < input->size (); i++)
 	{
 		cout << "1:\t" << (*input)[i]->inst1 << endl

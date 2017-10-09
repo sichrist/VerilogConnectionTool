@@ -5,8 +5,8 @@
 * @Last Modified time: 2017-09-28 15:07:03
 */
 
-#include "Filehandler.h"
-
+# include "Filehandler.h"
+# include "Path.h"
 
 verilogFile::verilogFile ()
 {
@@ -137,52 +137,47 @@ split (string str, char delim, string * i1, string * i2)
   *i2 = two;
 }
 
-#include "parser.h"
 void
 verilogFile::insert (long start, long end, string buffer)
 {
 
-  Parser parse;
+	Path pathObj(path,'/');
+	string pth = "";
 
-  parse.setstring (path);
-  parse.setdelimiter ('/');
-  parse.singleparse ();
-  string pth = "";
+	pathObj.end();
 
-  pth = "tmp_" + parse.getnextbw ();
+	pth = "tmp_" + pathObj.next ();
 
-  if (end == 0)
-    {
+	if (end == 0)
+	{
+		cerr << "Module in " << path << " not found" << endl;
+		return;
+	}
 
-      cerr << "Module in " << path << " not found" << endl;
-      return;
-    }
+	this->start = 0;
+	this->end = end;
+	write.open (pth.c_str (), fstream::trunc);
+	write.close ();
+	cpy (pth);
+	write.open (pth.c_str (), fstream::app);
+	write << buffer;
+	write.close ();
 
-  this->start = 0;
-  this->end = end;
-  write.open (pth.c_str (), fstream::trunc);
-  write.close ();
-  cpy (pth);
-  write.open (pth.c_str (), fstream::app);
-  write << buffer;
-  write.close ();
-
-  this->start = end;
-  this->end = -1;
-  cpy (pth);
+	this->start = end;
+	this->end = -1;
+	cpy (pth);
 
   //string cmd = "diff -uNr " + path + " " + pth + " >> history.diff";
   //system ((const char *) cmd.c_str ());
 
+	string tmp_path = this->path;
+	this->path = pth;
+	pth = tmp_path;
+	fullcpy (pth);
 
-  string tmp_path = this->path;
-  this->path = pth;
-  pth = tmp_path;
-  fullcpy (pth);
-
-  tmp_path = this->path;
-  this->path = pth;
-  pth = tmp_path;
+	tmp_path = this->path;
+	this->path = pth;
+	pth = tmp_path;
 
   //i++;
 }

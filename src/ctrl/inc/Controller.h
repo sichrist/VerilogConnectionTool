@@ -56,7 +56,6 @@ private:
 
   Modhandler * mod;
   verilogFile *vfile;
-  csvFile *csvfile;
   string modtxt;
   string csvConnections;
   string cfg;

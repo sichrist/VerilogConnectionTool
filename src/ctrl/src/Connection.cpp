@@ -26,10 +26,10 @@ filelist (Instance * instance, map < string, string > *paths)
 
   Path pathObject(def_path);
   
-  (*paths)[pathObject.getfilename ()] = pathObject.getpathfolder ();
+  (*paths)[pathObject.getfilename ()] = pathObject.getfolder ();
 
-  pathObject.setpath (ins_path);
-  (*paths)[pathObject.getfilename ()] = pathObject.getpathfolder ();
+  pathObject.set (ins_path);
+  (*paths)[pathObject.getfilename ()] = pathObject.getfolder ();
 }
 
 
@@ -56,9 +56,9 @@ filelistOpenPorts (Instance * instance, map < string, string > *paths)
 	  continue;
 	}
       cerr << "[" << it->second->getname () << "]" << endl;
-      pathObject.setpath (it->second->getins ()->getpath ());
+      pathObject.set (it->second->getins ()->getpath ());
 
-      (*paths)[pathObject.getfilename ()] = pathObject.getpathfolder ();
+      (*paths)[pathObject.getfilename ()] = pathObject.getfolder ();
 
     }
 
@@ -101,17 +101,16 @@ inline string Connection::getsamehierarchy( string inst_1, string inst_2 )
 
 inline modifyUnit *Connection::buildBridge( Modhandler *modhandler )
 {
-	modifyunit *retUnit = NULL;
 	Instance *instance = NULL;
 	string instname;
 
-	Cutter cutter(hierarchy);
+	Cutter cutter(hierarchy,'.');
 	cutter.end();
 
 	instname = cutter.next();
 	instance = modhandler->getInstance(hierarchy);
 
-	return new modifyunit(vfile, vfile, instance, con_, instname );
+	return new modifyUnit(vfile, vfile, instance, con_, instname );
 
 }
 
@@ -122,7 +121,6 @@ inline  map < int, modifyUnit * > *Connection::buildConnectiontree( Modhandler *
 	string instname 					= ""	;
 	map < int, modifyUnit * > *retmap 	= NULL	;
 	Instance *instance  				= NULL	;
-	Module *mod 						= NULL	;
 
 	Cutter insPath(instPath,'.');
 	Cutter insName(instPath,'.');
@@ -132,7 +130,7 @@ inline  map < int, modifyUnit * > *Connection::buildConnectiontree( Modhandler *
 	insPath.begin();
 	insName.end();
 
-	for (int i = 0; (instpath = insPath.getnext ()) != hierarchy; i++)
+	for (int i = 0; (instpath = insPath.next ()) != hierarchy; i++)
 	{
 
 		if( instpath == "" )
@@ -172,14 +170,14 @@ Connection::Connection (Modhandler *mod, string ios, string inst1, string inst2 
 
 	// check if building the IOs was successfull
 
-	if( con_->status() )
+	if( con_->getstatus() )
 		goto error;
 
 	hierarchy 	= getsamehierarchy( inst1, inst2 );
-	con1 		= buildConnectiontree( inst1 );
-	con2 		= buildConnectiontree( inst2 );
+	con1 		= buildConnectiontree( mod, inst1 );
+	con2 		= buildConnectiontree( mod, inst2 );
 
-	bridge 		= buildBridge();
+	bridge 		= buildBridge( mod );
 
 
 
@@ -302,10 +300,10 @@ Connection::~Connection ()
  /* if (con_ != NULL)
     delete con_;
 */
-  for (unsigned int i = 0; i < con1.size (); i++)
-    delete con1[i];
-  for (unsigned int i = 0; i < con2.size (); i++)
-    delete con2[i];
+  for (unsigned int i = 0; i < con1->size (); i++)
+    delete (*con1)[i];
+  for (unsigned int i = 0; i < con2->size (); i++)
+    delete (*con2)[i];
   if (bridge != NULL)
     delete bridge;
   if (vfile != NULL)
@@ -439,33 +437,25 @@ bool
 
 
 inline
-  map <
-  string,
-  string >
-  *Connection::getfilelist (void (*substitute)
-			    (Instance *, map < string, string > *))
+  map <  string,  string >  *Connection::getfilelist (void (*substitute)(Instance *, map < string, string > *))
 {
 
-  map < string, string > *paths = new map < string, string >;
-  map < int,
-  modifyUnit * >
-    con = con1;
+	map < string, string > *paths = new map < string, string >;
+	map < int,  modifyUnit * > *con = con1;
 
+	string modpath = "";
 
-  string
-    modpath = "";
-
-  for (int j = 0; j < 2; j++)
-    {
-      for (unsigned int i = 0; i < con.size (); i++)
+	for (int j = 0; j < 2; j++)
 	{
-	  substitute (con[i]->getInstance (), paths);
-	}
+		for (unsigned int i = 0; i < con->size (); i++)
+		{
+			substitute ((*con)[i]->getInstance (), paths);
+		}
 
-      con = con2;
+		con = con2;
     }
 
-  return paths;
+	return paths;
 }
 
 map < string, string > *Connection::getFileList ()
@@ -506,7 +496,7 @@ Connection::check_multiple_inst (Instance * instance)
   string modname = mod->getname ();
   string gen;
   string instname;
-  Path path;
+  
   boost::match_results < string::const_iterator > what;
   boost::regex generate_in_name_expr
   {
@@ -523,20 +513,19 @@ Connection::check_multiple_inst (Instance * instance)
 	  genvarnbr = what[2];
 	  instname = what[3];
 	}
-
       instance->getlabel (&gen);
-      path.setpath (instname, '.');
+      
+      Path path(instname, '.');
       instname = path.getfilename ();
       ret =
-	gens.insert (std::pair < string,
-		     string > (modname + gen + instname, " "));
+  gens.insert (std::pair < string,
+         string > (modname + gen + instname, " "));
     }
   else
     {
-      path.setpath (name, '.');
-      ret =
-	gens.insert (std::pair < string,
-		     string > (modname + path.getfilename (), " "));
+
+      Path path(name, '.');
+      ret = gens.insert (std::pair < string, string > (modname + path.getfilename (), " "));
 
     }
 
@@ -547,109 +536,101 @@ void
 Connection::handleOpenPorts ()
 {
 
-  modifyUnit *modify_instance = NULL;
-  Module *mod = NULL;
-  Instance *instance = NULL;
-  map < string, Instance * >*instances;
-  string instname;
-  string removeMe = "";
-  map < int, modifyUnit * >*con = &con1;
+	modifyUnit *modify_instance = NULL;
+	Module *mod = NULL;
+	Instance *instance = NULL;
+	map < string, Instance * >*instances;
+	string instname;
+	string removeMe = "";
+	map < int, modifyUnit * >*con = con1;
 
-  for (int j = 0; j < 2; j++)
-    {
-
-      gens.clear ();
-
-      for (unsigned int i = 0; i < con->size (); i++)
+	for (int j = 0; j < 2; j++)
 	{
-	  modify_instance = (*con)[i];
-	  instance = modify_instance->getInstance ();
-	  instname = instance->getname ();
-	  mod = instance->getdef ();
-	  instances = mod->getAllInstances ();
 
-	  if (instances == NULL)
-	    {
-	      cerr << "No further instances of: " << mod->getname () << endl;
-	      continue;
-	    }
+		gens.clear ();
 
-	  // make sure the Instance in *con[i] is already in the gens map
-	  check_multiple_inst (instance);
-
-	  for (map < string, Instance * >::iterator it = instances->begin ();
-	       it != instances->end (); ++it)
-	    {
-
-	      cout << "[" << it->first << "] == [" << instname << "]" << endl;
-
-	      if (!check_multiple_inst (it->second))
+		for (unsigned int i = 0; i < con->size (); i++)
 		{
-		  it->second->getlabel (&removeMe);
-		  cout << "Multiple : continue" << removeMe << it->second->
-		    getname () << endl;
-		  continue;
-		}
-	      if (it->first.compare (instname) == 0)
-		{
-		
-		  continue;
-		}
+			modify_instance = (*con)[i];
+			instance = modify_instance->getInstance ();
+			instname = instance->getname ();
+			mod = instance->getdef ();
+			instances = mod->getAllInstances ();
+
+			if (instances == NULL)
+			{
+				cerr << "No further instances of: " << mod->getname () << endl;
+				continue;
+			}
+
+			// make sure the Instance in *con[i] is already in the gens map
+			check_multiple_inst (instance);
+
+			for (map < string, Instance * >::iterator it = instances->begin ();it != instances->end (); ++it)
+			{
+
+				cout << "[" << it->first << "] == [" << instname << "]" << endl;
+
+				if (!check_multiple_inst (it->second))
+				{
+					it->second->getlabel (&removeMe);
+					cout << "Multiple : continue" << removeMe << it->second->getname () << endl;
+					continue;
+				}
+				if (it->first.compare (instname) == 0)
+				{
+					continue;
+				}
 	  
 
-	      modify_instance =
-		new modifyUnit (vfile, vfile, it->second, con_,
-				(it->second)->getname ());
-	      modify_instance->handleOpenPorts ();
-	    }
-	}
-      con = &con2;
+				modify_instance = new modifyUnit (vfile, vfile, it->second, con_,(it->second)->getname ());
+				modify_instance->handleOpenPorts ();
+
+			}
+		}
+		con = con2;
     }
 }
 
-void
-Connection::connect ()
+void Connection::connect ()
 {
 
-  int size = con1.size ();
+	int size = con1->size ();
 
-  for (int i = 0; i < size; i++)
-    con1[i]->addIos ();
-  for (int i = 0; i < size - 1; i++)
-    con1[i]->connectIos ();
+	for (int i = 0; i < size; i++)
+		(*con1)[i]->addIos ();
+	for (int i = 0; i < size - 1; i++)
+		(*con1)[i]->connectIos ();
 
+	size = con2->size ();
 
-  size = con2.size ();
+	for (int i = 0; i < size; i++)
+		(*con2)[i]->addInvertedIos ();
+	for (int i = 0; i < size - 1; i++)
+		(*con2)[i]->connectIos ();
 
-  for (int i = 0; i < size; i++)
-    con2[i]->addInvertedIos ();
-  for (int i = 0; i < size - 1; i++)
-    con2[i]->connectIos ();
-
-  if (con2.size () == 0)
-    {
-      con1[con1.size () - 1]->connectIos ();
-      bridge->addIos ();
-    }
-  else if (con1.size () == 0)
-    {
-      con2[con2.size () - 1]->connectIos ();
-      bridge->addInvertedIos ();
-    }
-  else
-    {
-      bridge->connectInstances (con2[con2.size () - 1],
-				con1[con1.size () - 1]);
-    }
-
+	if (con2->size () == 0)
+	{
+		(*con1)[con1->size () - 1]->connectIos ();
+		bridge->addIos ();
+	}
+	else if (con1->size () == 0)
+	{
+		(*con2)[con2->size () - 1]->connectIos ();
+		bridge->addInvertedIos ();
+	}
+	else
+	{
+		bridge->connectInstances ( (*con2)[con2->size () - 1],(*con1)[con1->size () - 1]);
+	}
 }
 
-map < int, modifyUnit * >Connection::getCon1 ()
+map < int, modifyUnit * >*Connection::getCon1 ()
 {
   return con1;
 }
 
-map < int, modifyUnit * >Connection::getCon2 ()
+map < int, modifyUnit * >*Connection::getCon2 ()
 {
   return con2;
 }

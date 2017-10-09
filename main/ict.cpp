@@ -11,10 +11,9 @@
 # include <stdio.h>
 # include <ctype.h>
 # include <stdlib.h>
-# include "parser.h"
+# include "Path.h"
 # include "modhandler.h"
 # include "Filehandler.h"
-# include "thread.h"
 # include "Controller.h"
 
 
@@ -25,8 +24,7 @@ void print_param( Parameter param )
 {
 	string W = "";
 	string I = "";
-	Path path;
-
+	
 	for (map < int, string >::iterator it = (param.warning)->begin ();
 				 it != (param.warning)->end (); ++it)
 		W += "\""+it->second +"\"\n";
@@ -149,11 +147,13 @@ int main(int argc, char **argv)
 	string project_path = "";
 	
 	#ifdef PROJECTPATH
-	string tmp = PROJECTPATH;
-	project_path = tmp.substr(0,tmp.length()-4);
+	project_path = PROJECTPATH;
+	
 	#endif
 
 	cfg = project_path+"cfg/paths.cfg";
+	cout << cfg << endl;
+	cout << project_path << endl;
     int opt = 0;
     int r = 0;
     int verbose = 0;

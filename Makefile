@@ -11,14 +11,6 @@ directory := src/ lib/src/
 TOPTARGETS := lib src main clean
 
 
-PATHSVAR :=
-
-
-$(TOPTARGETS): $(SUBDIRS)
-
-$(SUBDIRS):
-	@$(MAKE) $(PRNTFLAGS)  -C $@ global
-
 build:
 ifneq ($(wildcard ${CURDIR}/cfg/.*),)
 		@rm -rf ${CURDIR}/cfg/paths.cfg
@@ -60,9 +52,14 @@ else
 	@mkdir obj
 endif
 
-	@$(MAKE) $(PRNTFLAGS)	-C src/	src
-	@$(MAKE) $(PRNTFLAGS)	-C lib/ lib
-	@$(MAKE) $(PRNTFLAGS) 	-C main/ main
+ifneq ($(wildcard ${CURDIR}/bin),)
+
+else
+	@mkdir bin
+endif
+
+	@$(MAKE) $(PRNTFLAGS)	-C src/
+	@$(MAKE) $(PRNTFLAGS)	-C main/ main
 
 remove:
 	@rm -rf ${CURDIR}/cfg

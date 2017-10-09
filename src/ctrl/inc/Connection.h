@@ -91,7 +91,7 @@ private:
   string getsamehierarchy( string inst_1, string inst_2 );
 
   // Helper for Constructor
-  map < int, modifyUnit * >buildConnectiontree( Modhandler *modhandler, string instPath );
+  map < int, modifyUnit * > *buildConnectiontree( Modhandler *modhandler, string instPath );
 
   modifyUnit *buildBridge( Modhandler *modhandler );
 
@@ -116,8 +116,8 @@ public:
   // returns the bridge
   modifyUnit *getbridge ();
 
-    map < int, modifyUnit * >getCon1 ();
-    map < int, modifyUnit * >getCon2 ();
+    map < int, modifyUnit * >*getCon1 ();
+    map < int, modifyUnit * >*getCon2 ();
 
   // returns a list of paths to the files which have open ports
     map < string, string > *getFileListOpenPorts ();

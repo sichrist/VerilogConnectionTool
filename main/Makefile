@@ -1,12 +1,10 @@
 include ../flow/Makefile.flow
 
-TMP = $(wildcard ../obj/*.o)
-DEPS = $(TMP:../obj/%=%)
-VPATH = ../obj
-CFLAGS=-Wall -pedantic -Werror -g -I../lib/inc -I../header -std=c++0x
 .PHONY: ../bin/test ../bin/ict clean
-PROJECT_CONST = -D PROJECTPATH='"$(NEW_PATH)"'
 
+CFLAGS=-Wall -pedantic -Werror -g -std=c++0x
+PROJECT_CONST = -D PROJECTPATH='"$(PROJ_PATH)"'
+IDIR = -I $(UTI_PATH) -I$ $(CON_PATH) -I $(MOD_PATH)
 
 comp: build main
 	#@bash -c "indent $(INDENT_OPTIONS) test.cpp"
@@ -22,12 +20,13 @@ build:
 	@$(MAKE) $(PRNTFLAGS) -C ../lib
 
 ../bin/test: test.cpp $(DEPENDENCIES)
-	$(CC) $(BOOST_DIR) $(CFLAGS) $(LDFLAGS) $^ -o $@ $(BOOST_LIB)
+	$(CC) $(BOOST_DIR) $(IDIR) $(CFLAGS) $(LDFLAGS) $^ -o $@ $(BOOST_LIB)
 
 global: ../bin/test
 
 ../bin/ict: ict.cpp $(DEPENDENCIES)
-	$(CC) $(BOOST_DIR) $(PROJECT_CONST)  $(CFLAGS) $(LDFLAGS) $^ -o $@ $(BOOST_LIB)
+	@echo $(DEPENDENCIES)
+	$(CC) $(BOOST_DIR) $(IDIR) $(PROJECT_CONST)  $(CFLAGS) $(LDFLAGS) $^ -o $@ $(BOOST_LIB)
 
 # TestTargets
 

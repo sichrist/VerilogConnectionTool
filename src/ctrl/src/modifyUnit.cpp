@@ -5,8 +5,17 @@
 * @Last Modified time: 2017-09-28 15:07:31
 */
 
-# include "modifyUnit"
+# include "modifyUnit.h"
 
+# define BOLD     "\033[1m"
+# define YELLOW "\x1b[97m"
+# define RESET   "\x1b[0m"
+# define TRACE  "\x1b[93m"
+# define INFO   "\x1b[36m"
+# define DEBUG  "\x1b[94m"
+# define WARN   "\x1b[95m"
+# define ERROR  "\x1b[91m"
+# define FATAL  "\x1b[31m"
 
 modifyUnit::modifyUnit (verilogFile * vfile_inst, verilogFile * vfile_modu,
 			Instance * inst, IOcon * con, string instname)
@@ -68,19 +77,18 @@ modifyUnit::handleOpenPorts ()
 {
 
   static int nbr = 0;
-  Parser parser;
   string instancename = "";
   string modulename = "";
   string label = "";
 
   Module *instantiation = inst->getins ();
   Module *definition = inst->getdef ();
-  parser.setstring (instname);
-  parser.setdelimiter ('.');
-  parser.singleparse ();
+
+  Cutter cut(instname,'.');
+  cut.end();
   //parser.checkforbracket ();
 
-  instancename = parser.getnextbw ();
+  instancename = cut.next ();
   inst->getlabel (&label);
   if (label.length () > 0)
     instancename = label + "." + instancename;

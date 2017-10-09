@@ -47,6 +47,11 @@ exists_file (const std::string & name)
     }
 }
 
+Path::Path():Cutter( "", '/' )
+{
+
+}
+
 Path::Path( string path, char delim ) : Cutter( path, delim )
 {
   set( path, delim );

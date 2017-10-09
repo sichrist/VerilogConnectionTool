@@ -15,18 +15,12 @@ UTI_PATH=$(SRC_PATH)util/inc/
 CON_PATH=$(SRC_PATH)ctrl/inc/
 MOD_PATH=$(SRC_PATH)model/inc/ 
 
-SRC = ../src/
-HDR = ../header/
-LIB = ../lib/src/
-LIB_H = ../lib/inc/
 SRCFILES = $(wildcard $(SRC)*.cpp)
 LIBFILES = $(wildcard $(LIB)*.cpp)
-DEPENDENCIES = $(SRCFILES:../src/%.cpp=../obj/%.o) $(LIBFILES:../lib/src/%.cpp=../obj/%.o)
+DEPENDENCIES = $(wildcard $(OBJ_PATH)*.o)
 MAIN = ../main/
-IDIR = $(HDR) $(LIB_H)
-SUBDIRS = $(PWD)/lib/ $(PWD)/src/ $(PWD)/main/
-OBJDIR = ../obj
-BOOST 	= /home/projects/simon/lib_boost/boost_1_65_1/
+
+BOOST 	= /usr/local/boost_1_65_1/
 BOOST_DIR = -I $(BOOST)
 BOOST_LIB = $(BOOST)stage/lib/libboost_regex.a $(BOOST)stage/lib/libboost_iostreams.a
 

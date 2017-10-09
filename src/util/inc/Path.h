@@ -23,6 +23,8 @@ public:
 	// Constructor for a "normal" Path wir delim '/'
 	Path(string path );
 
+	Path();
+	
 	// Constructor for special paths
 	Path(string path, char delim);
 
